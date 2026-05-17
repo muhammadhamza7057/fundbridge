@@ -10,7 +10,7 @@ export default function CreateStartupPage() {
   const navigate = useNavigate();
   const { user, token } = useAuth();
   const isAuthenticated = Boolean(token || user);
-  const [form, setForm] = useState({ name: '', industry: '', fundingNeeded: '', description: '', pitchUpload: null });
+  const [form, setForm] = useState({ name: '', industry: '', fundingNeeded: '', description: '', pitchUpload: null, coverUpload: null, coverImage: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,12 +35,23 @@ export default function CreateStartupPage() {
       payload.append('industry', form.industry);
       payload.append('fundingNeeded', form.fundingNeeded);
       payload.append('description', form.description);
+      payload.append('coverImage', form.coverImage);
       if (form.pitchUpload) {
         payload.append('pitchUpload', form.pitchUpload);
+      }
+      if (form.coverUpload) {
+        payload.append('coverUpload', form.coverUpload);
       }
 
       const { data } = await api.post('/api/startup/create', payload);
       setSuccess(data.message || 'Startup profile saved successfully');
+      if (data && data.startup && data.startup._id) {
+        try {
+          localStorage.setItem(`fb_startup_${data.startup._id}`, JSON.stringify(data.startup));
+        } catch (cacheError) {}
+        navigate(`/startup/${data.startup._id}`);
+        return;
+      }
     } catch (err) {
       setError(err?.response?.data?.error || err?.response?.data?.message || 'Failed to save startup profile');
     } finally {
@@ -90,6 +101,17 @@ export default function CreateStartupPage() {
                     onChange={(event) => setForm({ ...form, pitchUpload: event.target.files?.[0] || null })}
                   />
                 </label>
+                <label className="block space-y-2 text-sm text-slate-600" htmlFor="coverUpload">
+                  <span className="font-medium text-slate-700">Cover Image Upload</span>
+                  <input
+                    id="coverUpload"
+                    type="file"
+                    accept="image/*"
+                    className="block w-full rounded-sm border border-slate-300 bg-white px-4 py-2 text-[15px] text-slate-900 outline-none transition file:mr-4 file:rounded-full file:border-0 file:bg-[#d8e75f] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-slate-900 hover:file:bg-[#cfe04e]"
+                    onChange={(event) => setForm({ ...form, coverUpload: event.target.files?.[0] || null })}
+                  />
+                </label>
+                <Input label="Cover Image URL" id="coverImage" value={form.coverImage} onChange={(event) => setForm({ ...form, coverImage: event.target.value })} placeholder="Paste a public image URL" />
               </div>
 
               {error ? <p className="mt-5 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">{error}</p> : null}

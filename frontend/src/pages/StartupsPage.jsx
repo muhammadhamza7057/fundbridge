@@ -1,6 +1,6 @@
 import Layout from '../components/Layout';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import api from '../services/api';
 import dummyStartups from '../data/dummyStartups';
 import { useAuth } from '../context/AuthContext';
@@ -13,11 +13,12 @@ export default function StartupsPage() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: '', industry: '', stage: '', description: '', country: 'Pakistan', coverImage: '' });
   const [message, setMessage] = useState('');
+  const formRef = useRef(null);
 
   useEffect(() => {
     let mounted = true;
     api
-      .get('/startup/list')
+      .get('/api/startup/list')
       .then((res) => {
         if (!mounted) return;
         // merge server results with locally-saved startups (from guest adds)
@@ -76,10 +77,13 @@ export default function StartupsPage() {
       payload.append('description', form.description);
       payload.append('country', form.country);
       if(form.coverImage) payload.append('coverImage', form.coverImage);
-      api.post('/startup/create', payload).then(res=>{
+      api.post('/api/startup/create', payload).then(res=>{
         const created = res.data;
         if(created){
           setStartups(prev => [created, ...prev.filter(x=> x._id !== created._id)]);
+          try {
+            localStorage.setItem(`fb_startup_${created._id}`, JSON.stringify(created));
+          } catch (e) {}
           // remove any temp local entry
           const local = JSON.parse(localStorage.getItem('fb_local_startups') || '[]').filter(x=> x._id !== newItem._id);
           saveLocalStartups(local);
@@ -102,6 +106,15 @@ export default function StartupsPage() {
       setMessage('Saved locally (you are not signed in).');
       setTimeout(()=>setMessage(''),4000);
     }
+  }
+
+  function openAddFromSide(){
+    if(!user) return;
+    if(!['founder','startup_rep'].includes(user.role)) return;
+    setShowForm(true);
+    setTimeout(()=>{
+      if(formRef.current) formRef.current.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 200);
   }
 
   return (
@@ -168,7 +181,7 @@ export default function StartupsPage() {
                 {popularPakistan.map(p => (
                   <div key={p._id} className="rounded-md overflow-hidden bg-gray-100 shadow-sm">
                     <div style={{paddingTop:'56%'}} className="w-full relative">
-                      <img src={p.coverImage || p.userId?.avatar} alt={p.name} className="absolute inset-0 h-full w-full object-cover" />
+                      <img src={p.coverImage || p.pitchDeck || p.userId?.avatar || 'https://ifdp.invest2innovate.com/wp-content/uploads/2025/06/Startup-life-cuate-1-1536x1536.png'} alt={p.name} className="absolute inset-0 h-full w-full object-cover" />
                     </div>
                     <div className="p-3">
                       <div className="flex items-center justify-between">
@@ -216,7 +229,7 @@ export default function StartupsPage() {
                     layout === 'grid' ? (
                       <article key={s._id} className="relative rounded-md overflow-hidden bg-gray-100 shadow-sm">
                         <div style={{paddingTop: '70%'}} className="w-full relative">
-                          <img src={s.coverImage || s.userId?.avatar || 'https://ifdp.invest2innovate.com/wp-content/uploads/2025/06/Startup-life-cuate-1-1536x1536.png'} alt={s.name} className="absolute inset-0 h-full w-full object-cover" />
+                          <img src={s.coverImage || s.pitchDeck || s.userId?.avatar || 'https://ifdp.invest2innovate.com/wp-content/uploads/2025/06/Startup-life-cuate-1-1536x1536.png'} alt={s.name} className="absolute inset-0 h-full w-full object-cover" />
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
                         <div className="absolute left-3 top-3">
@@ -240,7 +253,7 @@ export default function StartupsPage() {
                       </article>
                     ) : (
                       <div key={s._id} className="flex items-center gap-4 rounded-md border p-4">
-                        <img src={s.coverImage || s.userId?.avatar || 'https://ifdp.invest2innovate.com/wp-content/uploads/2025/06/Startup-life-cuate-1-1536x1536.png'} alt={s.name} className="h-28 w-28 rounded-md object-cover" />
+                        <img src={s.coverImage || s.pitchDeck || s.userId?.avatar || 'https://ifdp.invest2innovate.com/wp-content/uploads/2025/06/Startup-life-cuate-1-1536x1536.png'} alt={s.name} className="h-28 w-28 rounded-md object-cover" />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
                             <h3 className="text-lg font-semibold">{s.name}</h3>
@@ -274,9 +287,18 @@ export default function StartupsPage() {
           <div className="mt-8 max-w-2xl">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Add a Startup</h3>
-              <button onClick={()=> setShowForm(s=>!s)} className="text-sm text-slate-800">{showForm ? 'Close' : 'Add'}</button>
+              <div>
+                {!user ? (
+                  <div className="text-sm text-slate-600">Please <Link to="/login" className="text-[#0b6f4f]">log in</Link> to add.</div>
+                ) : (['founder','startup_rep'].includes(user.role) ? (
+                  <button onClick={()=> setShowForm(s=>!s)} className="text-sm text-slate-800">{showForm ? 'Close' : 'Add'}</button>
+                ) : (
+                  <div className="text-sm text-slate-600">Only startup accounts can add startups. <Link to="/register" className="text-[#0b6f4f]">Register as Startup</Link></div>
+                ))}
+              </div>
             </div>
             {showForm && (
+              <div ref={formRef}>
               <form onSubmit={handleAddStartup} className="mt-4 grid gap-3">
                 <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Startup name" className="rounded border px-3 py-2" />
                 <input value={form.industry} onChange={e=>setForm({...form,industry:e.target.value})} placeholder="Industry" className="rounded border px-3 py-2" />
@@ -288,9 +310,18 @@ export default function StartupsPage() {
                   <button type="submit" className="rounded bg-[#d8e75f] px-4 py-2 font-semibold">Add</button>
                 </div>
               </form>
+              </div>
             )}
             {message && <div className="mt-3 rounded bg-yellow-50 border-l-4 border-yellow-400 px-4 py-2 text-sm text-slate-800">{message}</div>}
           </div>
+
+          {/* Floating side add button for larger screens */}
+          {user && ['founder','startup_rep'].includes(user.role) && (
+            <button onClick={openAddFromSide} className="fixed right-6 top-1/3 z-40 hidden lg:flex items-center gap-3 rounded-full bg-[#d8e75f] px-4 py-3 shadow-lg text-sm font-semibold text-slate-900">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"/></svg>
+              Add Startup
+            </button>
+          )}
 
           {/* Startup strategies / guides */}
           <div className="mt-10">

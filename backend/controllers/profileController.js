@@ -9,7 +9,7 @@ function buildPublicUploadUrl(req, filename) {
 
 exports.createStartup = async (req, res) => {
   try {
-    const { name, industry, fundingNeeded, description } = req.body;
+    const { name, industry, fundingNeeded, description, coverImage } = req.body;
     const stage = req.body.stage || 'Seed';
     const parsedFundingNeeded = Number(fundingNeeded);
 
@@ -25,7 +25,12 @@ exports.createStartup = async (req, res) => {
       return res.status(403).json({ message: 'Only founders or startup representatives can create startup profiles' });
     }
 
-    const pitchDeck = req.file ? buildPublicUploadUrl(req, req.file.filename) : (req.body.pitchDeck || '');
+    const uploadedPitch = req.files?.pitchUpload?.[0];
+    const uploadedCover = req.files?.coverUpload?.[0];
+    const pitchDeck = uploadedPitch ? buildPublicUploadUrl(req, uploadedPitch.filename) : (req.body.pitchDeck || '');
+    const resolvedCoverImage = uploadedCover
+      ? buildPublicUploadUrl(req, uploadedCover.filename)
+      : (coverImage || req.body.coverImage || req.body.image || (uploadedPitch && uploadedPitch.mimetype?.startsWith('image/') ? buildPublicUploadUrl(req, uploadedPitch.filename) : '') || pitchDeck || '');
 
     const startup = await Startup.findOneAndUpdate(
       { userId: req.user._id },
@@ -38,6 +43,7 @@ exports.createStartup = async (req, res) => {
           fundingNeeded: parsedFundingNeeded,
           description,
           pitchDeck,
+          coverImage: resolvedCoverImage,
         },
       },
       { upsert: true, new: true, runValidators: true }
@@ -108,6 +114,18 @@ exports.listStartups = async (req, res) => {
     res.json(startups);
   } catch (error) {
     res.status(500).json({ message: 'Failed to list startups', error: error.message });
+  }
+};
+
+// Public: get single startup by id
+exports.getStartup = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const startup = await Startup.findById(id).populate('userId', 'name avatar trustScore role');
+    if (!startup) return res.status(404).json({ message: 'Startup not found' });
+    res.json({ startup });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch startup', error: error.message });
   }
 };
 

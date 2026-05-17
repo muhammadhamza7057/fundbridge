@@ -12,6 +12,7 @@ import DashboardSectionPage from '../pages/DashboardSectionPage';
 import KnowledgeHub from '../pages/KnowledgeHub';
 import StartupsPage from '../pages/StartupsPage';
 import InvestorsPage from '../pages/InvestorsPage';
+import StartupProfilePage from '../pages/StartupProfilePage';
 
 export default function AppRoutes() {
   return (
@@ -34,6 +35,7 @@ export default function AppRoutes() {
       <Route path="/oauth-callback" element={<OAuthCallback />} />
       <Route path="/knowledge" element={<KnowledgeHub />} />
       <Route path="/startups" element={<StartupsPage />} />
+      <Route path="/startup/:id" element={<StartupProfilePage />} />
       <Route path="/investors" element={<InvestorsPage />} />
       <Route path="/create-startup" element={<CreateStartupPage />} />
       <Route path="/investor-profile" element={<InvestorProfilePage />} />

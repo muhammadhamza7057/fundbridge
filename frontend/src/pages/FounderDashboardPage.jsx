@@ -69,6 +69,11 @@ export default function FounderDashboardPage() {
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">{item.label}</p>
                 <p className="mt-4 text-3xl font-black tracking-tight text-[var(--text)]">{item.value}</p>
                 <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{item.helper}</p>
+                {item.label === 'Startups' && (
+                  <div className="mt-4">
+                    <Link to="/create-startup" className="inline-block rounded bg-[#d8e75f] px-3 py-2 text-sm font-semibold text-slate-900">Add Startup</Link>
+                  </div>
+                )}
               </article>
             ))}
           </div>
