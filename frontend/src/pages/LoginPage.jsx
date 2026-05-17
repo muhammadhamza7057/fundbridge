@@ -79,15 +79,17 @@ export default function LoginPage() {
                 <div className="flex flex-wrap items-center gap-4">
                   <button type="button" onClick={async () => {
                     setError('');
-                    if (!form.role) {
-                      setError('Please select a role before continuing with Google');
-                      return;
-                    }
                     try {
-                      await signInWithGoogle({ role: form.role });
+                      const googlePayload = form.role ? { role: form.role } : {};
+                      await signInWithGoogle(googlePayload);
                       navigate('/dashboard', { replace: true });
                     } catch (e) {
-                      setError(e?.response?.data?.error || e?.response?.data?.message || 'Google sign-in failed');
+                      const backendMessage = e?.response?.data?.message || '';
+                      if (/select a role|role before continuing/i.test(backendMessage)) {
+                        setError('Your Google account is not linked to a FundBridge role yet. Please register once or choose a role and try again.');
+                        return;
+                      }
+                      setError(e?.response?.data?.error || backendMessage || 'Google sign-in failed');
                     }
                   }} className="inline-flex items-center gap-3 rounded-md border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50">
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

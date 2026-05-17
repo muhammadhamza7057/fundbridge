@@ -26,13 +26,17 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || 'http://localhost:3000,http://localhost:5173')
+const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || 'http://localhost:3000,http://localhost:5173,http://localhost:5175')
   .split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
 
 function isAllowedOrigin(origin) {
   if (!origin) {
+    return true;
+  }
+
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
     return true;
   }
 
