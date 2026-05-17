@@ -8,6 +8,7 @@ import CreateStartupPage from '../pages/CreateStartupPage';
 import InvestorProfilePage from '../pages/InvestorProfilePage';
 import FounderDashboardPage from '../pages/FounderDashboardPage';
 import InvestorDashboardPage from '../pages/InvestorDashboardPage';
+import AdminUsersPage from '../pages/AdminUsersPage';
 import DashboardSectionPage from '../pages/DashboardSectionPage';
 import KnowledgeHub from '../pages/KnowledgeHub';
 import StartupsPage from '../pages/StartupsPage';
@@ -32,6 +33,7 @@ export default function AppRoutes() {
       <Route path="/dashboard/investor/deals" element={<DashboardSectionPage role="investor" section="deals" />} />
       <Route path="/dashboard/investor/settings" element={<DashboardSectionPage role="investor" section="settings" />} />
       <Route path="/dashboard/investor/help" element={<DashboardSectionPage role="investor" section="help" />} />
+      <Route path="/dashboard/admin/users" element={<AdminUsersPage />} />
       <Route path="/oauth-callback" element={<OAuthCallback />} />
       <Route path="/knowledge" element={<KnowledgeHub />} />
       <Route path="/startups" element={<StartupsPage />} />

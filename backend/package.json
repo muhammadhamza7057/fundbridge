@@ -8,6 +8,7 @@
     "dev": "node scripts/dev.js",
     "db:init": "node scripts/initCollections.js",
     "db:seed": "node scripts/seedTestData.js",
+    "db:seed-admin": "node scripts/seedAdmin.js",
     "db:fix-firebase-uid": "node scripts/migrateFirebaseUid.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

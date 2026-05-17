@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import DashboardShell from '../components/DashboardShell';
 import { useAuth } from '../context/AuthContext';
 import { founderNavItems } from '../data/dashboardNavigation';
+import TrustPanel from '../components/TrustPanel';
 
 const quickStats = [
   { label: 'Startups', value: '08', helper: 'Saved in your pipeline' },
@@ -63,6 +64,8 @@ export default function FounderDashboardPage() {
         </div>
       }
     >
+          <TrustPanel />
+
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {quickStats.map((item) => (
               <article key={item.label} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 transition hover:-translate-y-0.5 hover:shadow-lg">

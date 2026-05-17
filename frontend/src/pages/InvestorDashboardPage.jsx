@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import DashboardShell from '../components/DashboardShell';
 import { useAuth } from '../context/AuthContext';
 import { investorNavItems } from '../data/dashboardNavigation';
+import TrustPanel from '../components/TrustPanel';
 
 const startupFeed = [
   { name: 'Nova Health', industry: 'HealthTech', stage: 'Seed', need: '$120k', match: 'Very High' },
@@ -56,6 +57,8 @@ export default function InvestorDashboardPage() {
         </div>
       }
     >
+          <TrustPanel />
+
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {[
               ['Feed items', '12', 'Startups ready to review'],

@@ -111,8 +111,13 @@ export default function RegisterPage() {
                         ...form,
                         name: form.name || `${form.firstName || ''} ${form.lastName || ''}`.trim(),
                       };
-                      await signInWithGoogle(googlePayload);
-                      navigate('/dashboard', { replace: true });
+                      const gdata = await signInWithGoogle(googlePayload);
+                      const role = gdata?.data?.user?.role || gdata?.user?.role || form.role;
+                      if (role === 'admin') {
+                        navigate('/dashboard/admin/users', { replace: true });
+                      } else {
+                        navigate('/dashboard', { replace: true });
+                      }
                     } catch (e) {
                       setError(e?.response?.data?.error || e?.response?.data?.message || 'Google sign-in failed');
                     }

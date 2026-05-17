@@ -4,8 +4,9 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 router.use(authMiddleware);
+const adminMiddleware = require('../middleware/adminMiddleware');
 
-// GET /api/users?role=investor
-router.get('/', listOtherUsers);
+// GET /api/users?role=investor (admin only)
+router.get('/', adminMiddleware, listOtherUsers);
 
 module.exports = router;

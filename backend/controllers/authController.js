@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
 const getFirebaseAdmin = require('../firebaseAdmin');
+const { recalculateTrustFields } = require('../utils/trust');
 
 const allowedRoles = ['founder', 'investor', 'startup_rep', 'guest'];
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || 'fundbridge-55b5e';
@@ -142,6 +143,11 @@ exports.register = async (req, res) => {
       authProvider: 'local',
     });
 
+    const trust = recalculateTrustFields(user);
+    user.profileCompleteness = trust.profileCompleteness;
+    user.trustScore = trust.trustScore;
+    await user.save();
+
     const token = signToken(user);
 
     return res.status(201).json({
@@ -159,6 +165,10 @@ exports.register = async (req, res) => {
         avatar: user.avatar,
         authProvider: user.authProvider,
         trustScore: user.trustScore,
+        profileCompleteness: user.profileCompleteness,
+        emailVerified: user.emailVerified,
+        phoneVerified: user.phoneVerified,
+        adminApproved: user.adminApproved,
       },
     });
   } catch (error) {
@@ -188,6 +198,11 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    const trust = recalculateTrustFields(user);
+    user.profileCompleteness = trust.profileCompleteness;
+    user.trustScore = trust.trustScore;
+    await user.save();
+
     const token = signToken(user);
 
     return res.status(200).json({
@@ -206,6 +221,10 @@ exports.login = async (req, res) => {
         avatar: user.avatar,
         authProvider: user.authProvider,
         trustScore: user.trustScore,
+        profileCompleteness: user.profileCompleteness,
+        emailVerified: user.emailVerified,
+        phoneVerified: user.phoneVerified,
+        adminApproved: user.adminApproved,
       },
     });
   } catch (error) {
@@ -264,11 +283,17 @@ exports.firebaseAuth = async (req, res) => {
       role: effectiveRole,
       phone: phone || existingUser?.phone || '',
       avatar: decoded.picture || existingUser?.avatar || '',
+      emailVerified: Boolean(decoded.email_verified),
     };
 
     const user = existingUser
       ? await User.findByIdAndUpdate(existingUser._id, updates, { new: true, runValidators: true })
       : await User.create({ ...updates, password: null });
+
+    const trust = recalculateTrustFields(user);
+    user.profileCompleteness = trust.profileCompleteness;
+    user.trustScore = trust.trustScore;
+    await user.save();
 
     const token = signToken(user);
 
@@ -287,6 +312,10 @@ exports.firebaseAuth = async (req, res) => {
         avatar: user.avatar,
         authProvider: user.authProvider,
         trustScore: user.trustScore,
+        profileCompleteness: user.profileCompleteness,
+        emailVerified: user.emailVerified,
+        phoneVerified: user.phoneVerified,
+        adminApproved: user.adminApproved,
       },
     });
   } catch (error) {

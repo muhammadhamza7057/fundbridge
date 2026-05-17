@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiBell, FiChevronRight, FiLogOut, FiMenu, FiSearch, FiX } from 'react-icons/fi';
+import { FiBell, FiChevronRight, FiLogOut, FiMenu, FiSearch, FiX, FiUser } from 'react-icons/fi';
 import logo from '../../assets/logo.png';
 import { useAuth } from '../context/AuthContext';
 
@@ -176,6 +176,28 @@ export default function DashboardShell({
                       <p className="text-sm font-semibold text-slate-900">{user?.name || 'Account'}</p>
                       <p className="text-xs text-slate-500">{user?.email || role}</p>
                     </div>
+                    <div className="px-4 py-3 border-b border-slate-100 text-xs text-slate-500">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="flex items-center gap-2 font-semibold text-slate-700"><FiUser /> Profile score</span>
+                        <span className="font-semibold text-slate-900">{user?.profileCompleteness ?? 0}%</span>
+                      </div>
+                      <div className="mt-2 flex items-center justify-between gap-3">
+                        <span>Trust score</span>
+                        <span className="font-semibold text-slate-900">{user?.trustScore ?? 0}</span>
+                      </div>
+                      <div className="mt-2 flex items-center justify-between gap-3">
+                        <span>Verified</span>
+                        <span className="font-semibold text-slate-900">{user?.emailVerified ? 'Email' : 'Email pending'}</span>
+                      </div>
+                    </div>
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      <FiUser className="text-lg" />
+                      Profile summary
+                    </Link>
                     <button
                       onClick={() => {
                         logout();

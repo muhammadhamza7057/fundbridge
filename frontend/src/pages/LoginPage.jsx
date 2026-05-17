@@ -18,7 +18,11 @@ export default function LoginPage() {
     try {
       const data = await login(form.email, form.password);
       updateUser({ ...data.user, role: data.user?.role || form.role });
-      navigate('/dashboard', { replace: true });
+      if (data?.user?.role === 'admin') {
+        navigate('/dashboard/admin/users', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (err) {
       setError(err?.response?.data?.error || err?.response?.data?.message || 'Login failed');
     }
@@ -54,16 +58,18 @@ export default function LoginPage() {
                   <Input label="Password" id="password" type="password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder="Password" required />
                   <label className="flex flex-col gap-2 text-sm text-slate-600">
                     <span className="font-medium text-slate-700">Role</span>
+                    <span className="text-xs text-slate-400">Select the role for this login. Admin users will be sent to the admin dashboard.</span>
                     <select
                       value={form.role}
                       onChange={(event) => setForm({ ...form, role: event.target.value })}
-                      className="rounded-sm border border-slate-300 bg-white px-3 py-2 text-slate-700 outline-none"
+                      className="rounded-lg border border-slate-300 bg-white px-3 py-3 text-slate-700 outline-none transition focus:border-[#f18f80] focus:ring-2 focus:ring-[#f18f80]/20"
                     >
                       <option value="" disabled>Choose a role</option>
                       <option value="founder">Founder</option>
                       <option value="investor">Investor</option>
                       <option value="startup_rep">Startup Representative</option>
                       <option value="guest">Guest</option>
+                      <option value="admin">Admin</option>
                     </select>
                   </label>
                 </div>
@@ -81,8 +87,13 @@ export default function LoginPage() {
                     setError('');
                     try {
                       const googlePayload = form.role ? { role: form.role } : {};
-                      await signInWithGoogle(googlePayload);
-                      navigate('/dashboard', { replace: true });
+                      const gdata = await signInWithGoogle(googlePayload);
+                      const role = gdata?.data?.user?.role || gdata?.user?.role;
+                      if (role === 'admin') {
+                        navigate('/dashboard/admin/users', { replace: true });
+                      } else {
+                        navigate('/dashboard', { replace: true });
+                      }
                     } catch (e) {
                       const backendMessage = e?.response?.data?.message || '';
                       if (/select a role|role before continuing/i.test(backendMessage)) {
