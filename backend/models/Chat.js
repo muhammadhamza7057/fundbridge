@@ -9,11 +9,19 @@ const messageSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: true,
       trim: true,
+      default: '',
     },
+    attachments: [
+      {
+        url: { type: String, required: true },
+        filename: { type: String },
+        mimetype: { type: String },
+      },
+    ],
+    readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
-  { timestamps: true, _id: false }
+  { timestamps: true }
 );
 
 const chatSchema = new mongoose.Schema(

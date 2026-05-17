@@ -1,0 +1,50 @@
+import { useEffect, useRef, useState } from 'react';
+import { io } from 'socket.io-client';
+
+let socketInstance = null;
+
+export const useSocket = () => {
+  const [isConnected, setIsConnected] = useState(false);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    if (socketInstance) {
+      setSocket(socketInstance);
+      setIsConnected(socketInstance.connected);
+      return;
+    }
+
+    // Connect to the socket server (backend)
+    const socketUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const newSocket = io(socketUrl, {
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5,
+      transports: ['websocket'],
+    });
+
+    newSocket.on('connect', () => {
+      console.log('Socket connected:', newSocket.id);
+      setIsConnected(true);
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('Socket disconnected');
+      setIsConnected(false);
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
+    });
+
+    socketInstance = newSocket;
+    setSocket(newSocket);
+
+    return () => {
+      // Don't disconnect on unmount - keep the connection alive
+    };
+  }, []);
+
+  return { socket, isConnected };
+};

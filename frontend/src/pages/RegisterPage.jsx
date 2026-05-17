@@ -74,6 +74,7 @@ export default function RegisterPage() {
                     <select value={form.role} onChange={(event) => setForm({ ...form, role: event.target.value })} className="rounded-sm border border-slate-300 bg-white px-3 py-2 text-slate-700 outline-none">
                       <option value="" disabled>Choose a role</option>
                       <option value="investor">Investor</option>
+                      <option value="founder">Founder</option>
                       <option value="startup_rep">Startup Representative</option>
                       <option value="guest">Guest</option>
                     </select>

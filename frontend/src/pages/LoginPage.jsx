@@ -30,7 +30,7 @@ export default function LoginPage() {
         <section className="bg-[#f7f7f7] px-5 py-14 md:px-12 md:py-20">
           <div className="mx-auto max-w-[1440px]">
             <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
-              <h1 className="text-4xl font-normal text-slate-800 md:text-5xl">Sign In to FundBridge</h1>
+              <h1 className="text-4xl font-semibold text-slate-800 md:text-5xl">Sign In to FundBridge</h1>
               <p className="text-sm text-slate-400">Investor Founder Discovery Platform  &nbsp;›&nbsp;  Sign In to FundBridge</p>
             </div>
           </div>
@@ -48,10 +48,24 @@ export default function LoginPage() {
                 </Link>
               </div>
 
-              <form onSubmit={submit} className="mt-14 max-w-[620px] space-y-6">
+              <form onSubmit={submit} className="mt-14 max-w-[620px] space-y-6 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
                 <div className="grid gap-5">
                   <Input label="Username/Email" id="email" type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} placeholder="Username/Email" required />
                   <Input label="Password" id="password" type="password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder="Password" required />
+                  <label className="flex flex-col gap-2 text-sm text-slate-600">
+                    <span className="font-medium text-slate-700">Role</span>
+                    <select
+                      value={form.role}
+                      onChange={(event) => setForm({ ...form, role: event.target.value })}
+                      className="rounded-sm border border-slate-300 bg-white px-3 py-2 text-slate-700 outline-none"
+                    >
+                      <option value="" disabled>Choose a role</option>
+                      <option value="founder">Founder</option>
+                      <option value="investor">Investor</option>
+                      <option value="startup_rep">Startup Representative</option>
+                      <option value="guest">Guest</option>
+                    </select>
+                  </label>
                 </div>
 
                 <div className="flex items-center justify-between text-sm text-slate-600">
@@ -92,17 +106,6 @@ export default function LoginPage() {
                     Remember Me
                   </label>
                 </div>
-                <div className="mt-2 flex flex-col gap-2">
-                  <div className="text-sm font-medium text-slate-700">Role</div>
-                  <select value={form.role} onChange={(event) => setForm({ ...form, role: event.target.value })} className="w-full rounded-sm border border-slate-300 bg-white px-3 py-2 text-slate-700 outline-none md:w-fit">
-                    <option value="" disabled>Choose a role</option>
-                    <option value="founder">Founder</option>
-                    <option value="investor">Investor</option>
-                    <option value="startup_rep">Startup Representative</option>
-                    <option value="guest">Guest</option>
-                  </select>
-                </div>
-
                 {error ? <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">{error}</p> : null}
               </form>
             </div>

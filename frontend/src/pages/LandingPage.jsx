@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
 
-function FeatureCard({ icon, title, text, buttonText, tone }) {
+function FeatureCard({ icon, title, text, buttonText, tone, to }) {
   return (
     <article className="rounded-[3px] border border-slate-200 bg-white p-6 shadow-sm">
       <div className={`mb-10 inline-flex h-12 w-12 items-center justify-center rounded-[4px] ${tone} text-2xl`}>
@@ -10,9 +10,15 @@ function FeatureCard({ icon, title, text, buttonText, tone }) {
       </div>
       <h3 className="text-[22px] font-semibold text-slate-900">{title}</h3>
       <p className="mt-4 min-h-[96px] text-[15px] leading-7 text-slate-700">{text}</p>
-      <button className={`mt-6 rounded-sm px-4 py-2 text-sm font-medium ${tone} text-slate-900`}>
-        {buttonText} →
-      </button>
+      {to ? (
+        <Link to={to} className={`mt-6 inline-block rounded-sm px-4 py-2 text-sm font-medium ${tone} text-slate-900`}>
+          {buttonText} →
+        </Link>
+      ) : (
+        <button className={`mt-6 rounded-sm px-4 py-2 text-sm font-medium ${tone} text-slate-900`}>
+          {buttonText} →
+        </button>
+      )}
     </article>
   );
 }
@@ -97,6 +103,7 @@ export default function LandingPage() {
                 text="Explore profiles of investors driving innovation and growth. Connect with individuals and firms supporting startups across diverse sectors."
                 buttonText="Explore Investors"
                 tone="bg-[#f5a79b]"
+                to="/investors"
               />
               <FeatureCard
                 icon={
@@ -108,6 +115,7 @@ export default function LandingPage() {
                 text="Browse startups at various stages across multiple industries. Discover teams solving real challenges and scaling impactful ventures."
                 buttonText="Explore Startups"
                 tone="bg-[#d6ccff]"
+                to="/startups"
               />
               <FeatureCard
                 icon={

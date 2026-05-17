@@ -1,29 +1,52 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo.png';
+import { useAuth } from '../context/AuthContext';
 
 export default function Layout({ children }) {
   const projectName = 'FundBridge';
+  const location = useLocation();
+  const { user, logout } = useAuth();
+  const dashboardPath = user?.role === 'investor' ? '/dashboard/investor' : '/dashboard/founder';
+  const isDashboardRoute = location.pathname.startsWith('/dashboard');
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <header className="border-b border-white/5 bg-[#2c2c2c] text-white">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 md:px-12">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
+      <header className="border-b border-[var(--border)] bg-[var(--hero)] text-white">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 py-5 md:px-12">
           <Link to="/" className="flex items-center gap-3 text-white">
             <img src={logo} alt={`${projectName} logo`} className="h-9 w-auto" />
             <span className="text-2xl font-black tracking-tight">{projectName}</span>
           </Link>
-          <nav className="hidden md:block">
-            <div className="flex items-center gap-10 rounded-full bg-white px-16 py-5 text-[15px] font-semibold text-slate-900 shadow-sm">
+          <nav className="hidden lg:block">
+            <div className="flex items-center gap-8 rounded-full bg-white px-10 py-4 text-[15px] font-semibold text-slate-900 shadow-sm">
               <Link to="/">Home</Link>
-              <a href="#startups">Startups</a>
-              <a href="#investors">Investors</a>
-              <a href="#knowledge">Knowledge Hub</a>
+              <Link to="/startups">Startups</Link>
+              <Link to="/investors">Investors</Link>
+              <Link to="/knowledge">Knowledge Hub</Link>
+              {user ? <Link to={dashboardPath}>Dashboard</Link> : null}
             </div>
           </nav>
-          <Link to="/register" className="text-sm font-medium text-white/90 hover:text-white">Get Started</Link>
+          <div className="flex items-center gap-3">
+            {!isDashboardRoute && user ? (
+              <>
+                <Link to={dashboardPath} className="rounded-full bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-slate-900">
+                  Dashboard
+                </Link>
+                <button type="button" onClick={logout} className="text-sm font-medium text-white/90 hover:text-white">
+                  Logout
+                </button>
+              </>
+            ) : (
+              !isDashboardRoute ? (
+                <Link to="/register" className="text-sm font-medium text-white/90 hover:text-white">
+                  Get Started
+                </Link>
+              ) : null
+            )}
+          </div>
         </div>
       </header>
       {children}
-      <footer className="bg-[#2c2c2c] px-5 py-12 text-white md:px-12">
+      <footer className="bg-[var(--hero)] px-5 py-12 text-white md:px-12">
         <div className="mx-auto grid max-w-[1440px] gap-10 md:grid-cols-[1.1fr_0.8fr_0.8fr_0.8fr_1fr]">
           <div>
             <div className="flex items-center gap-2">
@@ -52,7 +75,7 @@ export default function Layout({ children }) {
           <div>
             <h3 className="mb-6 text-lg font-bold">Resources</h3>
             <ul className="space-y-5 text-sm text-white/75">
-              <li>Knowledge Hub</li>
+              <li><Link to="/knowledge">Knowledge Hub</Link></li>
               <li>Blogs</li>
             </ul>
           </div>
@@ -65,7 +88,7 @@ export default function Layout({ children }) {
             <p className="mt-6 text-sm font-semibold">Subscribe to our Newsletter</p>
             <div className="mt-3 flex gap-2">
               <input className="w-full rounded-sm px-3 py-2 text-sm text-slate-900 outline-none" placeholder="Your email" />
-              <button className="rounded-sm bg-[#f18f80] px-4 py-2 text-sm font-semibold text-white">Subscribe</button>
+              <button className="rounded-sm bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white">Subscribe</button>
             </div>
           </div>
         </div>

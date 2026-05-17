@@ -100,3 +100,23 @@ exports.createInvestor = async (req, res) => {
     return res.status(500).json({ message: 'Failed to save investor profile', error: error.message });
   }
 };
+
+// Public: list all startups with basic user info
+exports.listStartups = async (req, res) => {
+  try {
+    const startups = await Startup.find().populate('userId', 'name avatar trustScore role');
+    res.json(startups);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to list startups', error: error.message });
+  }
+};
+
+// Public: list all investors with basic user info
+exports.listInvestors = async (req, res) => {
+  try {
+    const investors = await Investor.find().populate('userId', 'name avatar trustScore role');
+    res.json(investors);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to list investors', error: error.message });
+  }
+};
