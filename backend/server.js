@@ -29,48 +29,10 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-function getAllowedOrigins() {
-  const originSources = [
-    process.env.CLIENT_URLS,
-    process.env.CLIENT_URL,
-    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '',
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'http://localhost:5175',
-    'http://localhost:5176',
-  ];
-
-  return [...new Set(
-    originSources
-      .filter(Boolean)
-      .flatMap((value) => String(value).split(','))
-      .map((origin) => origin.trim())
-      .filter(Boolean)
-  )];
-}
-
-const allowedOrigins = getAllowedOrigins();
-
-function isAllowedOrigin(origin) {
-  if (!origin) {
-    return true;
-  }
-
-  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
-    return true;
-  }
-
-  return allowedOrigins.includes(origin);
-}
+const CLIENT_FRONTEND_URL = process.env.CLIENT_URL || 'https://your-frontend.vercel.app';
 
 const corsOptions = {
-  origin(origin, callback) {
-    if (isAllowedOrigin(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(new Error(`Not allowed by CORS: ${origin}`));
-  },
+  origin: CLIENT_FRONTEND_URL,
   credentials: true,
 };
 
