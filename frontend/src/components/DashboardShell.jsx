@@ -107,7 +107,7 @@ export default function DashboardShell({
     <section className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(199,219,79,0.14),transparent_26%),radial-gradient(circle_at_top_right,rgba(246,176,166,0.12),transparent_24%),linear-gradient(180deg,#f5f1e8_0%,#efe8db_100%)] text-slate-900 lg:flex">
       {menuOpen ? <button type="button" className="fixed inset-0 z-40 bg-slate-950/30 lg:hidden" onClick={() => setMenuOpen(false)} aria-label="Close sidebar" /> : null}
 
-      <aside className="fixed inset-y-0 left-0 z-50 hidden w-[300px] flex-col border-r border-white/10 bg-[#2d2d2d] text-white shadow-[18px_0_50px_rgba(15,23,42,0.18)] lg:sticky lg:top-0 lg:flex lg:h-screen">
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-[300px] flex-col border-r border-white/10 bg-[#2d2d2d] text-white shadow-[18px_0_50px_rgba(15,23,42,0.18)] lg:flex lg:h-screen">
         <div className="flex items-center gap-3 px-6 py-6">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 p-2 shadow-inner shadow-black/10">
             <img src={logo} alt="FundBridge" className="h-full w-full object-contain" />
@@ -128,7 +128,7 @@ export default function DashboardShell({
         </div>
       </aside>
 
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 lg:pl-[300px]">
         <header className="border-b border-white/60 bg-white/85 px-4 py-4 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-xl md:px-6 lg:px-8">
           <div className="mx-auto flex max-w-[1520px] items-center justify-between gap-4">
             <div className="flex min-w-0 flex-1 items-center gap-3">
