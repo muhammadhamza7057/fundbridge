@@ -423,11 +423,7 @@ export default function DashboardSectionPage({ role, section }) {
   const config = sectionContent[role]?.[section];
   const navItems = role === 'founder' ? founderNavItems : investorNavItems;
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeChatId, setActiveChatId] = useState(() => searchParams.get('chatId') || null);
-
-  useEffect(() => {
-    setActiveChatId(searchParams.get('chatId') || null);
-  }, [searchParams]);
+  const activeChatId = searchParams.get('chatId') || null;
 
   const content = useMemo(() => {
     if (!config) return null;
@@ -451,7 +447,7 @@ export default function DashboardSectionPage({ role, section }) {
           <div className="space-y-6">
             <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm md:p-6">
               {activeChatId ? (
-                <ChatWindow chatId={activeChatId} title={config.title} />
+                <ChatWindow key={activeChatId} chatId={activeChatId} title={config.title} />
               ) : (
                 <div className="flex h-96 items-center justify-center text-slate-500">Select a user to open chat</div>
               )}

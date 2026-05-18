@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { useSocket } from '../hooks/useSocket';
 import { getUnreadMap } from '../services/chatService';
@@ -10,6 +10,11 @@ export function SocketProvider({ children }) {
   const { socket, isConnected } = useSocket();
   const [unreadMap, setUnreadMap] = useState({}); // { otherUserId: count }
   const [currentOpenChatId, setCurrentOpenChatId] = useState(null);
+  const currentOpenChatIdRef = useRef(null);
+
+  useEffect(() => {
+    currentOpenChatIdRef.current = currentOpenChatId;
+  }, [currentOpenChatId]);
 
   // Join as user when connected and authenticated
   useEffect(() => {
@@ -35,7 +40,7 @@ export function SocketProvider({ children }) {
           const senderId = msg.sender?._id;
           if (!chatId || !senderId) return;
           // if the user is viewing this chat, ignore
-          if (currentOpenChatId && String(currentOpenChatId) === String(chatId)) return;
+          if (currentOpenChatIdRef.current && String(currentOpenChatIdRef.current) === String(chatId)) return;
           setUnreadMap((prev) => ({ ...(prev || {}), [senderId]: ((prev && prev[senderId]) || 0) + 1 }));
           // also optional: show browser notification or in-app toast
         } catch (e) {
@@ -72,11 +77,7 @@ export function SocketProvider({ children }) {
     });
   };
 
-  return (
-    <SocketContext.Provider value={{ socket, isConnected, unreadMap, setUnreadMap, currentOpenChatId, setCurrentOpenChatId, markChatReadForUser }}>
-      {children}
-    </SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={{ socket, isConnected, unreadMap, setUnreadMap, currentOpenChatId, setCurrentOpenChatId, markChatReadForUser }}>{children}</SocketContext.Provider>;
 }
 
 export function useSocketContext() {

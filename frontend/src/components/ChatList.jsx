@@ -16,19 +16,16 @@ export default function ChatList({ role, onOpenChat }) {
     let mounted = true;
     async function load() {
       setLoading(true);
+      setError(null);
       try {
-        // Show users of the opposite role by default unless showAll is selected
         const targetRole = showAll ? undefined : role === 'founder' ? 'investor' : 'founder';
-        const data = await listUsers(targetRole);
+        const [data, map] = await Promise.all([
+          listUsers(targetRole),
+          getUnreadMap().catch(() => ({})),
+        ]);
         if (!mounted) return;
         setUsers(data || []);
-        // fetch unread map once
-        try {
-          const map = await getUnreadMap();
-          setUnread(map || {});
-        } catch (e) {
-          // ignore
-        }
+        setUnread(map || {});
       } catch (err) {
         setError(err.message || 'Failed to load users');
       } finally {
@@ -39,28 +36,7 @@ export default function ChatList({ role, onOpenChat }) {
     return () => {
       mounted = false;
     };
-  }, [role]);
-
-  useEffect(() => {
-    // reload when toggling showAll
-    let mounted = true;
-    async function reload() {
-      setLoading(true);
-      try {
-        const targetRole = showAll ? undefined : role === 'founder' ? 'investor' : 'founder';
-        const data = await listUsers(targetRole);
-        if (!mounted) return;
-        setUsers(data || []);
-      } catch (err) {
-      } finally {
-        setLoading(false);
-      }
-    }
-    reload();
-    return () => {
-      mounted = false;
-    };
-  }, [showAll]);
+  }, [role, showAll]);
 
   const { unreadMap: globalUnreadMap, markChatReadForUser } = useSocketContext();
 

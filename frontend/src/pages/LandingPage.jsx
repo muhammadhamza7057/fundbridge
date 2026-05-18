@@ -1,10 +1,31 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FiBarChart2, FiShield, FiUsers, FiTrendingUp } from 'react-icons/fi';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
 
+const pageVariants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0 },
+};
+
 function FeatureCard({ icon, title, text, buttonText, tone, to }) {
   return (
-    <article className="rounded-[3px] border border-slate-200 bg-white p-6 shadow-sm">
+    <motion.article
+      variants={itemVariants}
+      whileHover={{ y: -6, scale: 1.01 }}
+      transition={{ type: 'spring', stiffness: 220, damping: 20 }}
+      className="group rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_16px_45px_rgba(15,23,42,0.06)] transition"
+    >
       <div className={`mb-10 inline-flex h-12 w-12 items-center justify-center rounded-[4px] ${tone} text-2xl`}>
         {icon}
       </div>
@@ -19,23 +40,23 @@ function FeatureCard({ icon, title, text, buttonText, tone, to }) {
           {buttonText} →
         </button>
       )}
-    </article>
+    </motion.article>
   );
 }
 
 function StepRow({ number, title, text }) {
   return (
-    <div className="grid grid-cols-[40px_1fr] gap-4 md:grid-cols-[56px_1fr]">
+    <motion.div variants={itemVariants} className="grid grid-cols-[40px_1fr] gap-4 md:grid-cols-[56px_1fr]">
       <div className="flex justify-center">
         <div className="relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#f18f80] bg-[#f6a192] text-sm font-semibold text-slate-900 md:h-12 md:w-12">
           {number}
         </div>
       </div>
-      <div className="rounded-sm border border-slate-200 bg-white px-5 py-4">
+      <div className="rounded-[20px] border border-slate-200 bg-white px-5 py-4 shadow-sm">
         <h4 className="text-[18px] font-medium text-slate-800">{title}</h4>
         <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -43,50 +64,80 @@ export default function LandingPage() {
   return (
     <Layout>
       <main className="bg-white text-slate-900">
-        <section className="bg-[#2c2c2c] pb-14 pt-20 text-white md:pb-20 md:pt-24">
-          <div className="mx-auto grid max-w-[1440px] items-center gap-10 px-5 md:grid-cols-2 md:px-12">
-            <div>
-              <h1 className="max-w-xl text-4xl font-semibold leading-[1.05] md:text-6xl">Investor Founder Discovery Platform</h1>
-              <p className="mt-5 max-w-lg text-[17px] leading-8 text-white/85">
-                Pakistan’s first verified digital repository of startups, investors, and founders, enabling curated discovery and visibility.
+        <section className="relative overflow-hidden bg-[#1f2430] pb-14 pt-20 text-white md:pb-20 md:pt-24">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(216,231,95,0.28),transparent_22%),radial-gradient(circle_at_top_right,rgba(241,143,128,0.22),transparent_24%),linear-gradient(180deg,rgba(18,24,38,0.2),rgba(18,24,38,0.8))]" />
+          <motion.div
+            aria-hidden="true"
+            className="absolute -left-24 top-14 h-56 w-56 rounded-full bg-[#d8e75f]/20 blur-3xl"
+            animate={{ y: [0, -12, 0], x: [0, 8, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            aria-hidden="true"
+            className="absolute -right-20 top-24 h-72 w-72 rounded-full bg-[#f18f80]/18 blur-3xl"
+            animate={{ y: [0, 12, 0], x: [0, -10, 0] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div variants={pageVariants} initial="hidden" animate="visible" className="relative mx-auto grid max-w-[1440px] items-center gap-10 px-5 md:grid-cols-2 md:px-12">
+            <motion.div variants={itemVariants}>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white/80 backdrop-blur">
+                <FiShield /> Verified network
+              </div>
+              <h1 className="mt-5 max-w-xl text-4xl font-black leading-[1.02] md:text-6xl">Investor Founder Discovery Platform</h1>
+              <p className="mt-5 max-w-lg text-[17px] leading-8 text-white/80">
+                Pakistan’s verified digital repository of startups, investors, founders, and admin-reviewed trust signals, enabling curated discovery and visibility.
               </p>
-              <div className="mt-6 flex items-center gap-4">
-                <Link to="/login" className="text-sm font-medium text-white/90 hover:text-white">
+              <div className="mt-6 flex flex-wrap items-center gap-4">
+                <Link to="/login" className="text-sm font-semibold text-white/90 transition hover:text-white">
                   Sign in
                 </Link>
                 <Link to="/register">
-                  <Button className="bg-[#d8e75f] px-5 py-3 text-sm font-semibold text-slate-900">Get Started</Button>
+                  <Button className="bg-[#d8e75f] px-5 py-3 text-sm font-semibold text-slate-900 shadow-[0_14px_30px_rgba(216,231,95,0.25)]">Get Started</Button>
                 </Link>
               </div>
-              <p className="mt-6 text-[17px] text-white/90">The Go-To Repository for Startups, Investors, and Founders</p>
-              <div className="mt-8 grid max-w-md grid-cols-3 gap-8 text-center md:text-left">
+
+              <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {[
-                  ['500+', 'Investors'],
-                  ['500+', 'Startups'],
-                  ['700+', 'Founders'],
-                ].map(([value, label]) => (
-                  <div key={label}>
-                    <div className="text-4xl font-semibold">{value}</div>
-                    <div className="mt-1 text-sm text-white/80">{label}</div>
-                  </div>
+                  { value: '500+', label: 'Investors', icon: FiUsers },
+                  { value: '500+', label: 'Startups', icon: FiBarChart2 },
+                  { value: '700+', label: 'Founders', icon: FiTrendingUp },
+                  { value: '100%', label: 'Verified flow', icon: FiShield },
+                ].map((item) => (
+                  <motion.div
+                    key={item.label}
+                    variants={itemVariants}
+                    whileHover={{ y: -4 }}
+                    className="rounded-[22px] border border-white/10 bg-white/8 p-4 backdrop-blur-md"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <div className="text-3xl font-black tracking-tight text-white">{item.value}</div>
+                        <div className="mt-1 text-sm text-white/70">{item.label}</div>
+                      </div>
+                      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-lg text-white">
+                        <item.icon />
+                      </span>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
-            <div className="flex justify-center md:justify-end">
-              <div className="w-full max-w-[620px] overflow-hidden rounded-[26px]">
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="flex justify-center md:justify-end">
+              <div className="w-full max-w-[620px] overflow-hidden rounded-[30px] border border-white/10 bg-white/5 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur">
                 <img
                   src="https://ifdp.invest2innovate.com/wp-content/uploads/2025/05/i2i_Scale_KV_Horizontal-wo-BG-1536x916.png"
                   alt="FundBridge hero visual"
-                  className="h-auto w-full object-contain"
+                  className="h-auto w-full object-cover"
                   loading="eager"
                 />
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </section>
 
         <section className="px-5 py-16 md:px-12 md:py-20">
-          <div className="mx-auto max-w-[1440px] text-center">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }} variants={pageVariants} className="mx-auto max-w-[1440px] text-center">
             <h2 className="text-3xl font-semibold text-slate-800 md:text-4xl">Value That Drives Growth</h2>
             <p className="mx-auto mt-4 max-w-4xl text-[15px] leading-7 text-slate-600 md:text-[16px]">
               The Investor Founder Discovery Platform (FundBridge) is a curated repository of startups, investors, and founders, where verified profiles of innovative startups, their founders, and keen investors are actively maintained.
@@ -130,18 +181,18 @@ export default function LandingPage() {
                 tone="bg-[#d7eb4a]"
               />
             </div>
-          </div>
+          </motion.div>
         </section>
 
         <section className="px-5 py-16 md:px-12 md:py-20" id="how-it-works">
-          <div className="mx-auto max-w-4xl text-center">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={pageVariants} className="mx-auto max-w-4xl text-center">
             <h2 className="text-3xl font-semibold text-slate-800 md:text-4xl">How it Works</h2>
             <p className="mx-auto mt-4 max-w-4xl text-[15px] leading-7 text-slate-600 md:text-[16px]">
               Our verification process ensures that all community members are genuine, creating a trusted environment for meaningful connections.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="mx-auto mt-10 grid max-w-4xl gap-5 md:mt-14 md:grid-cols-[110px_1fr]">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }} variants={pageVariants} className="mx-auto mt-10 grid max-w-4xl gap-5 md:mt-14 md:grid-cols-[110px_1fr]">
             <div className="hidden md:block">
               <div className="mx-auto h-full w-px bg-slate-400" />
             </div>
@@ -151,7 +202,7 @@ export default function LandingPage() {
               <StepRow number="3" title="Get Verified & Go Live" text="Once approved, your profile goes live and becomes part of our verified network." />
               <StepRow number="4" title="Curated Matchmaking" text="If you opt in, we’ll connect you with relevant startups, founders, or investors for collaboration." />
             </div>
-          </div>
+          </motion.div>
 
           <div className="mt-8 flex justify-center">
             <Link to="/register">

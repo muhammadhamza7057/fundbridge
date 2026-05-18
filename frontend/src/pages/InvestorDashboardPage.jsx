@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import DashboardShell from '../components/DashboardShell';
 import { useAuth } from '../context/AuthContext';
 import { investorNavItems } from '../data/dashboardNavigation';
@@ -57,7 +58,9 @@ export default function InvestorDashboardPage() {
         </div>
       }
     >
-          <TrustPanel />
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+            <TrustPanel />
+          </motion.div>
 
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {[
@@ -66,16 +69,16 @@ export default function InvestorDashboardPage() {
               ['Deals', '02', 'Open deal reviews'],
               ['Match score', '91%', 'Average fit score'],
             ].map(([label, value, helper]) => (
-              <article key={label} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 transition hover:-translate-y-0.5 hover:shadow-lg">
+              <motion.article key={label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} whileHover={{ y: -6 }} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 transition hover:shadow-lg">
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">{label}</p>
                 <p className="mt-4 text-3xl font-black tracking-tight text-[var(--text)]">{value}</p>
                 <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{helper}</p>
-              </article>
+              </motion.article>
             ))}
           </div>
 
           <div className="mt-6 grid gap-6 xl:grid-cols-[1.2fr_0.9fr]">
-            <section id="feed" className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
+            <motion.section id="feed" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <h2 className="text-xl font-semibold text-[var(--text)]">Startup feed</h2>
@@ -85,7 +88,7 @@ export default function InvestorDashboardPage() {
               </div>
               <div className="mt-5 space-y-3">
                 {startupFeed.map((startup) => (
-                  <article key={startup.name} className="rounded-[22px] border border-[var(--border)] bg-[var(--surface-2)] p-4">
+                  <article key={startup.name} className="rounded-[22px] border border-[var(--border)] bg-[var(--surface-2)] p-4 transition hover:-translate-y-0.5 hover:shadow-md">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
                         <h3 className="font-semibold text-[var(--text)]">{startup.name}</h3>
@@ -100,15 +103,15 @@ export default function InvestorDashboardPage() {
                   </article>
                 ))}
               </div>
-            </section>
+            </motion.section>
 
             <section className="space-y-6">
-              <article id="chat-requests" className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
+              <motion.article id="chat-requests" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
                 <h2 className="text-xl font-semibold text-[var(--text)]">Chat requests</h2>
                 <p className="mt-1 text-sm text-[var(--muted)]">Review new messages from founders.</p>
                 <div className="mt-5 space-y-3">
                   {requests.map((item) => (
-                    <article key={item.title} className="rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+                    <article key={item.title} className="rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4 transition hover:-translate-y-0.5 hover:shadow-sm">
                       <div className="flex items-center justify-between gap-3">
                         <div>
                           <p className="font-medium text-[var(--text)]">{item.title}</p>
@@ -119,15 +122,15 @@ export default function InvestorDashboardPage() {
                     </article>
                   ))}
                 </div>
-              </article>
+              </motion.article>
 
-              <article id="deals" className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
+              <motion.article id="deals" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
                 <h2 className="text-xl font-semibold text-[var(--text)]">Deals</h2>
                 <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Track active negotiations, due dates, and next steps.</p>
                 <div className="mt-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm text-[var(--muted)]">
                   2 deals currently under review.
                 </div>
-              </article>
+              </motion.article>
             </section>
           </div>
     </DashboardShell>

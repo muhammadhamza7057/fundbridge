@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { FiAlertCircle, FiCheckCircle, FiMail, FiRefreshCw, FiShield, FiSmartphone, FiUsers, FiSend, FiX } from 'react-icons/fi';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import DashboardShell from '../components/DashboardShell';
+
+const chartColors = ['#0f172a', '#d8e75f', '#f18f80'];
 
 const adminNavItems = [
   { to: '/dashboard/admin/users', label: 'Overview', icon: FiUsers, group: 'main' },
@@ -196,7 +200,7 @@ export default function AdminUsersPage() {
     const load = async () => {
       setLoading(true);
       try {
-        const { data } = await api.get('/api/users');
+        const { data } = await api.get('/api/users/admin');
         setUsers(Array.isArray(data) ? data : []);
       } catch (error) {
         setNotice(error?.response?.data?.message || 'Failed to load users');
@@ -223,6 +227,15 @@ export default function AdminUsersPage() {
       pendingEmailNotice,
     };
   }, [users]);
+
+  const relationChartData = useMemo(
+    () => [
+      { name: 'Verified', value: users.filter((u) => u.adminRelationStatus === 'verified').length },
+      { name: 'Pending', value: users.filter((u) => !u.adminRelationStatus || u.adminRelationStatus === 'pending').length },
+      { name: 'Rejected', value: users.filter((u) => u.adminRelationStatus === 'rejected').length },
+    ],
+    [users]
+  );
 
   const filteredUsers = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -289,7 +302,7 @@ export default function AdminUsersPage() {
         setNotice('Trust score recalculated.');
       }
 
-      const { data } = await api.get('/api/users');
+      const { data } = await api.get('/api/users/admin');
       setUsers(Array.isArray(data) ? data : []);
     } catch (error) {
       setNotice(error?.response?.data?.message || 'Action failed');
@@ -345,6 +358,39 @@ export default function AdminUsersPage() {
               <div className="rounded-2xl bg-slate-50 p-4">
                 <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Verified relations</p>
                 <p className="mt-2 text-2xl font-black text-slate-900">{users.filter((u) => u.adminRelationStatus === 'verified').length}</p>
+              </div>
+            </div>
+            <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.2fr]">
+              <div className="rounded-2xl bg-slate-50 p-4">
+                <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Relationship breakdown</p>
+                <div className="mt-3 h-60">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={relationChartData} dataKey="value" nameKey="name" innerRadius={54} outerRadius={84} paddingAngle={4}>
+                        {relationChartData.map((entry, index) => (
+                          <Cell key={entry.name} fill={chartColors[index % chartColors.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+                <p className="text-xs uppercase tracking-[0.24em] text-slate-400">How to use this</p>
+                <p className="mt-3 leading-7">Use the chart to quickly spot who still needs relationship verification, who is approved, and where to send the next email template. This helps the admin manage trust without leaving the dashboard.</p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  {[
+                    { label: 'Verified', tone: 'green' },
+                    { label: 'Pending', tone: 'amber' },
+                    { label: 'Rejected', tone: 'red' },
+                  ].map((item) => (
+                    <div key={item.label} className="rounded-2xl bg-white p-3">
+                      <p className={`text-sm font-semibold ${item.tone === 'green' ? 'text-emerald-600' : item.tone === 'amber' ? 'text-amber-600' : 'text-red-600'}`}>{item.label}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

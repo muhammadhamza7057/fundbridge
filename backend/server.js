@@ -14,6 +14,7 @@ const chatRoutes = require('./routes/chatRoutes');
 const dealRoutes = require('./routes/dealRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const chatSocket = require('./sockets/chatSocket');
+const { connectMongo } = require('./utils/mongoConnection');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -83,15 +84,6 @@ app.get('/', (req, res) => {
 chatSocket(io);
 
 const PORT = process.env.PORT || 5000;
-const CANONICAL_DB_NAME = 'FundBridge';
-
-function normalizeMongoUri(uri) {
-  if (!uri) return uri;
-
-  return uri.replace(/\/(fundbridge)(?=\?|$)/i, `/${CANONICAL_DB_NAME}`);
-}
-
-const MONGO_URI = normalizeMongoUri(process.env.MONGO_URI || process.env.MONGODB_URI);
 let recoveredFromPortConflict = false;
 
 function getOwningProcessId(port) {
@@ -135,36 +127,14 @@ function delay(ms) {
 }
 
 async function connectToMongoWithRetry(maxAttempts = 5) {
-  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-    try {
-      console.log('Connecting to MongoDB Atlas...');
-      await mongoose.connect(MONGO_URI, {
-        serverSelectionTimeoutMS: 10000,
-      });
-      console.log('Connected to MongoDB Atlas');
-      return;
-    } catch (error) {
-      const transientDnsError = ['EAI_AGAIN', 'ESERVFAIL', 'ETIMEDOUT', 'ECONNRESET'].some((code) =>
-        String(error?.message || '').includes(code) || String(error?.cause?.code || '') === code
-      );
-
-      if (attempt < maxAttempts && transientDnsError) {
-        const waitMs = 2000 * attempt;
-        console.warn(`MongoDB connection attempt ${attempt} failed (${error.message}). Retrying in ${waitMs}ms...`);
-        await delay(waitMs);
-        continue;
-      }
-
-      throw error;
-    }
-  }
+  return connectMongo(mongoose, {
+    label: 'MongoDB',
+    retryCount: maxAttempts,
+    retryDelayMs: 2000,
+  });
 }
 
 async function startServer() {
-  if (!MONGO_URI) {
-    throw new Error('MONGO_URI or MONGODB_URI is not defined in the environment');
-  }
-
   mongoose.connection.on('error', (error) => {
     console.error('MongoDB connection error:', error.message);
   });

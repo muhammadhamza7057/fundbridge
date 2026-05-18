@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiSend } from 'react-icons/fi';
 import { useChat } from '../hooks/useChat';
 import { getChat } from '../services/chatService';
@@ -104,9 +105,9 @@ export default function ChatWindow({ chatId, title }) {
   }
 
   return (
-    <div className="flex h-96 flex-col rounded-lg border border-slate-200 bg-slate-50">
+    <div className="flex h-[min(78vh,760px)] flex-col overflow-hidden rounded-[30px] border border-emerald-100 bg-[#efeae2] shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-slate-200 bg-white px-6 py-4">
+      <div className="flex items-center gap-3 border-b border-emerald-900/10 bg-[#075e54] px-5 py-4 text-white md:px-6">
         {(() => {
           const currentId = user?.uid || user?._id || user?.id;
           const other = participants?.length ? participants.find((p) => String(p._id) !== String(currentId)) : null;
@@ -115,11 +116,15 @@ export default function ChatWindow({ chatId, title }) {
               {other?.avatar ? (
                 <img src={other.avatar} alt={other.name} className="h-8 w-8 rounded-full object-cover" />
               ) : (
-                <div className="h-8 w-8 rounded-full bg-[#15172d] text-white flex items-center justify-center text-sm font-bold">{other?.name?.charAt(0)?.toUpperCase()}</div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-sm font-bold">{other?.name?.charAt(0)?.toUpperCase()}</div>
               )}
               <div>
-                <div className="text-sm font-semibold text-slate-900">{other?.name || title || 'Chat'}</div>
-                <div className="text-xs text-slate-500">{other?.role === 'investor' ? 'Investor' : other?.role === 'founder' ? 'Founder' : other?.role === 'startup_rep' ? 'Startup Representative' : 'Guest'}</div>
+                <div className="text-sm font-semibold text-white">{other?.name || title || 'Chat'}</div>
+                <div className="text-xs text-white/75">{other?.role === 'investor' ? 'Investor' : other?.role === 'founder' ? 'Founder' : other?.role === 'startup_rep' ? 'Startup Representative' : 'Guest'}</div>
+              </div>
+              <div className="ml-auto flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/90">
+                <span className={`h-2 w-2 rounded-full ${isConnected ? 'bg-emerald-300' : 'bg-rose-300'}`} />
+                {isConnected ? 'Online' : 'Connecting'}
               </div>
             </>
           );
@@ -127,30 +132,36 @@ export default function ChatWindow({ chatId, title }) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 space-y-3 overflow-y-auto px-6 py-4">
+      <div className="flex-1 space-y-3 overflow-y-auto bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.45),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(216,231,95,0.18),transparent_24%)] px-4 py-4 md:px-6">
         {((messages && messages.length) || (initialMessages && initialMessages.length)) === 0 ? (
-          <div className="flex h-full items-center justify-center text-slate-400 text-sm">
+          <div className="flex h-full items-center justify-center text-sm text-slate-500">
             No messages yet. Start the conversation!
           </div>
         ) : (
-          (messages.length ? messages : initialMessages).map((msg) => {
+          (messages.length ? messages : initialMessages).map((msg, index) => {
             const currentId = user?.uid || user?._id || user?.id;
             const isMine = String(msg.sender._id) === String(currentId);
             const attachments = msg.attachments || [];
             const onlyImages = (!msg.content || String(msg.content).trim() === '') && attachments.length > 0 && attachments.every((a) => a.mimetype && a.mimetype.startsWith('image/'));
             return (
-              <div key={msg._id} className={`flex items-end gap-3 ${isMine ? 'justify-end' : 'justify-start'}`}>
+              <motion.div
+                key={msg._id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: Math.min(index * 0.02, 0.18) }}
+                className={`flex items-end gap-3 ${isMine ? 'justify-end' : 'justify-start'}`}
+              >
                 {!isMine && (
                   <div>
                     {msg.sender.avatar ? (
                       <img src={msg.sender.avatar} alt={msg.sender.name} className="h-7 w-7 rounded-full object-cover" />
                     ) : (
-                      <div className="h-7 w-7 rounded-full bg-[#15172d] text-white flex items-center justify-center text-xs font-bold">{msg.sender.name?.charAt(0)?.toUpperCase()}</div>
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#075e54] text-xs font-bold text-white">{msg.sender.name?.charAt(0)?.toUpperCase()}</div>
                     )}
                   </div>
                 )}
 
-                <div className={`${onlyImages ? '' : 'max-w-xs rounded-lg px-4 py-2 text-sm'} ${isMine ? (onlyImages ? '' : 'bg-[#d8e75f] text-slate-900') : (onlyImages ? '' : 'bg-white text-slate-900 border border-slate-200')}`}>
+                <div className={`${onlyImages ? '' : 'max-w-[78%] rounded-2xl px-4 py-3 text-sm shadow-sm md:max-w-lg'} ${isMine ? (onlyImages ? '' : 'bg-[#dcf8c6] text-slate-900') : (onlyImages ? '' : 'border border-slate-200 bg-white text-slate-900')}`}>
                   {!isMine && (
                     <p className="text-xs font-semibold text-slate-600 mb-1">{msg.sender.name} <span className="text-[10px] text-slate-400">· {msg.sender.role ? (msg.sender.role === 'investor' ? 'Investor' : msg.sender.role === 'founder' ? 'Founder' : msg.sender.role === 'startup_rep' ? 'Startup Representative' : 'Guest') : ''}</span></p>
                   )}
@@ -184,22 +195,24 @@ export default function ChatWindow({ chatId, title }) {
                     </div>
                   )}
                 </div>
-              </div>
+              </motion.div>
             );
           })
         )}
 
         {/* Typing indicator */}
+          <AnimatePresence>
           {typingUsers.length > 0 && (
-            <div className="flex items-center gap-3 px-6 py-2">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-3 px-6 py-2">
               {typingUsers.map((u) => (
                 <div key={u.userId} className="flex items-center gap-2">
-                  <div className="h-6 w-6 rounded-full bg-slate-200" />
+                  <div className="h-6 w-6 rounded-full bg-emerald-200" />
                   <div className="text-xs text-slate-500">{u.userName} is typing…</div>
                 </div>
               ))}
-            </div>
+            </motion.div>
           )}
+          </AnimatePresence>
 
         <div ref={messagesEndRef} />
       </div>
@@ -219,16 +232,16 @@ export default function ChatWindow({ chatId, title }) {
       )}
 
       {/* Message input */}
-      <form onSubmit={handleSendMessage} className="border-t border-slate-200 bg-white p-4">
-        <div className="flex gap-3">
+      <form onSubmit={handleSendMessage} className="border-t border-emerald-900/10 bg-[#f0f2f5] p-3 md:p-4">
+        <div className="flex gap-3 rounded-[24px] border border-white/70 bg-white p-3 shadow-[0_10px_30px_rgba(15,23,42,0.08)]">
             <div className="relative">
-              <button type="button" onClick={() => setShowUploadMenu((s) => !s)} disabled={uploading} className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 disabled:opacity-60">
+              <button type="button" onClick={() => setShowUploadMenu((s) => !s)} disabled={uploading} className="inline-flex h-11 items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:opacity-60">
                 Upload
               </button>
               {showUploadMenu && (
-                <div className="absolute left-0 top-12 z-20 w-40 rounded border bg-white shadow">
-                  <button type="button" onClick={() => { setShowUploadMenu(false); imageInputRef.current?.click(); }} className="w-full px-3 py-2 text-left text-sm">Photo</button>
-                  <button type="button" onClick={() => { setShowUploadMenu(false); fileInputRef.current?.click(); }} className="w-full px-3 py-2 text-left text-sm">File</button>
+                <div className="absolute left-0 top-[52px] z-20 w-44 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
+                  <button type="button" onClick={() => { setShowUploadMenu(false); imageInputRef.current?.click(); }} className="w-full px-4 py-3 text-left text-sm transition hover:bg-slate-50">Photo</button>
+                  <button type="button" onClick={() => { setShowUploadMenu(false); fileInputRef.current?.click(); }} className="w-full px-4 py-3 text-left text-sm transition hover:bg-slate-50">File</button>
                 </div>
               )}
             </div>
@@ -274,12 +287,12 @@ export default function ChatWindow({ chatId, title }) {
             onChange={handleInputChange}
             placeholder={isConnected ? 'Type a message...' : 'Connecting...'}
             disabled={!isConnected}
-            className="flex-1 rounded-lg border border-slate-200 px-4 py-2 text-sm outline-none placeholder:text-slate-400 focus:border-slate-400 disabled:bg-slate-50 disabled:text-slate-400"
+            className="flex-1 rounded-full border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 disabled:bg-slate-50 disabled:text-slate-400"
           />
             <button
               type="submit"
               disabled={!inputValue.trim() || !isConnected}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#d8e75f] text-slate-900 transition hover:bg-[#c5d747] disabled:bg-slate-200 disabled:text-slate-400"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#075e54] text-white transition hover:bg-[#064e46] disabled:bg-slate-200 disabled:text-slate-400"
             >
               <FiSend className="text-lg" />
             </button>

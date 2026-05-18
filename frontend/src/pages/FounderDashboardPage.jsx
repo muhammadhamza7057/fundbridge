@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import DashboardShell from '../components/DashboardShell';
 import { useAuth } from '../context/AuthContext';
 import { founderNavItems } from '../data/dashboardNavigation';
@@ -64,11 +65,13 @@ export default function FounderDashboardPage() {
         </div>
       }
     >
-          <TrustPanel />
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+            <TrustPanel />
+          </motion.div>
 
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {quickStats.map((item) => (
-              <article key={item.label} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 transition hover:-translate-y-0.5 hover:shadow-lg">
+              <motion.article key={item.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} whileHover={{ y: -6 }} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 transition hover:shadow-lg">
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">{item.label}</p>
                 <p className="mt-4 text-3xl font-black tracking-tight text-[var(--text)]">{item.value}</p>
                 <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{item.helper}</p>
@@ -77,12 +80,12 @@ export default function FounderDashboardPage() {
                     <Link to="/create-startup" className="inline-block rounded bg-[#d8e75f] px-3 py-2 text-sm font-semibold text-slate-900">Add Startup</Link>
                   </div>
                 )}
-              </article>
+              </motion.article>
             ))}
           </div>
 
           <div className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.95fr]">
-            <section id="investors" className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
+            <motion.section id="investors" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <h2 className="text-xl font-semibold text-[var(--text)]">Investors</h2>
@@ -92,7 +95,7 @@ export default function FounderDashboardPage() {
               </div>
               <div className="mt-5 grid gap-3">
                 {investorCards.map((investor) => (
-                  <article key={investor.name} className="rounded-[22px] border border-[var(--border)] bg-[var(--surface-2)] p-4">
+                  <article key={investor.name} className="rounded-[22px] border border-[var(--border)] bg-[var(--surface-2)] p-4 transition hover:-translate-y-0.5 hover:shadow-md">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
                         <h3 className="font-semibold text-[var(--text)]">{investor.name}</h3>
@@ -107,15 +110,15 @@ export default function FounderDashboardPage() {
                   </article>
                 ))}
               </div>
-            </section>
+            </motion.section>
 
             <section className="space-y-6">
-              <article id="matches" className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
+              <motion.article id="matches" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
                 <h2 className="text-xl font-semibold text-[var(--text)]">Matches</h2>
                 <p className="mt-1 text-sm text-[var(--muted)]">Track the conversations that are already in progress.</p>
                 <div className="mt-5 space-y-3">
                   {matches.map((item) => (
-                    <div key={item.title} className="rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+                    <div key={item.title} className="rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4 transition hover:-translate-y-0.5 hover:shadow-sm">
                       <div className="flex items-center justify-between gap-3">
                         <div>
                           <p className="font-medium text-[var(--text)]">{item.title}</p>
@@ -126,23 +129,23 @@ export default function FounderDashboardPage() {
                     </div>
                   ))}
                 </div>
-              </article>
+              </motion.article>
 
-              <article id="chat" className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
+              <motion.article id="chat" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
                 <h2 className="text-xl font-semibold text-[var(--text)]">Chat</h2>
                 <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Keep messages short and reply quickly.</p>
                 <div className="mt-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm text-[var(--muted)]">
                   No unread messages. New intros will appear here.
                 </div>
-              </article>
+              </motion.article>
 
-              <article id="deals" className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
+              <motion.article id="deals" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
                 <h2 className="text-xl font-semibold text-[var(--text)]">Deals</h2>
                 <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Keep terms, dates, and next steps in one place.</p>
                 <div className="mt-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm text-[var(--muted)]">
                   3 deals are active in your pipeline.
                 </div>
-              </article>
+              </motion.article>
             </section>
           </div>
     </DashboardShell>

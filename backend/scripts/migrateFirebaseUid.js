@@ -2,16 +2,12 @@ const dotenv = require('dotenv');
 const path = require('path');
 const mongoose = require('mongoose');
 const User = require('../models/User');
+const { connectMongo } = require('../utils/mongoConnection');
 
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 async function migrate() {
-  const mongoUri = (process.env.MONGO_URI || process.env.MONGODB_URI || '').replace(/\/(fundbridge)(?=\?|$)/i, '/FundBridge');
-  if (!mongoUri) {
-    throw new Error('MONGO_URI or MONGODB_URI is not defined in the environment');
-  }
-
-  await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 10000 });
+  await connectMongo(mongoose, { label: 'MongoDB', retryCount: 3, retryDelayMs: 1000 });
 
   const result = await User.updateMany(
     { firebaseUid: '' },
