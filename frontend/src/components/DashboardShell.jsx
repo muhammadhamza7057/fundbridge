@@ -104,7 +104,10 @@ export default function DashboardShell({
   };
 
   return (
-    <section className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(199,219,79,0.14),transparent_26%),radial-gradient(circle_at_top_right,rgba(246,176,166,0.12),transparent_24%),linear-gradient(180deg,#f5f1e8_0%,#efe8db_100%)] text-slate-900 lg:flex">
+    <section
+      className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(199,219,79,0.14),transparent_26%),radial-gradient(circle_at_top_right,rgba(246,176,166,0.12),transparent_24%),linear-gradient(180deg,#f5f1e8_0%,#efe8db_100%)] text-slate-900 lg:flex"
+      style={{ fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
+    >
       {menuOpen ? <button type="button" className="fixed inset-0 z-40 bg-slate-950/30 lg:hidden" onClick={() => setMenuOpen(false)} aria-label="Close sidebar" /> : null}
 
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-[300px] flex-col border-r border-white/10 bg-[#2d2d2d] text-white shadow-[18px_0_50px_rgba(15,23,42,0.18)] lg:flex lg:h-screen">

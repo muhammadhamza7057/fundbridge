@@ -36,7 +36,10 @@ export default function DashboardPage() {
 
   return (
     <Layout>
-      <main className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
+      <main
+        className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"
+        style={{ fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
+      >
         <motion.div variants={shellVariants} initial="hidden" animate="visible" className="rounded-[32px] border border-[var(--border)] bg-[var(--surface-2)] p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)] md:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[var(--muted)]">Dashboard hub</p>
           <h1 className="mt-4 text-3xl font-black tracking-tight text-[var(--text)] md:text-5xl">
