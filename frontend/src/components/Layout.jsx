@@ -10,16 +10,16 @@ export default function Layout({ children }) {
   const isDashboardRoute = location.pathname.startsWith('/dashboard');
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-      <header className="border-b border-[var(--border)] bg-[var(--hero)] text-white">
+      <header className="border-b border-black/5 bg-white/90 text-[var(--text)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-5 py-4 md:px-12">
           <Link to="/" className="flex items-center gap-2 text-white">
-            <span className="text-3xl md:text-4xl font-extrabold tracking-tight leading-none">
-              <span className="text-white">Fund</span>
-              <span className="ml-1 text-[#d8e75f]">Bridge</span>
+            <span className="text-3xl font-black tracking-tight leading-none md:text-4xl">
+              <span className="text-[var(--text)]">Fund</span>
+              <span className="ml-1 text-[var(--brand)]">Bridge</span>
             </span>
           </Link>
           <nav className="hidden lg:block">
-            <div className="flex items-center gap-6 rounded-full bg-white px-8 py-3 text-[15px] font-semibold text-slate-900 shadow-sm">
+            <div className="flex items-center gap-6 rounded-full border border-black/5 bg-white px-8 py-3 text-[15px] font-semibold text-[var(--text)] shadow-[0_10px_30px_rgba(15,23,42,0.05)]">
               <Link to="/">Home</Link>
               <Link to="/startups">Startups</Link>
               <Link to="/investors">Investors</Link>
@@ -30,16 +30,16 @@ export default function Layout({ children }) {
           <div className="flex items-center gap-3">
             {!isDashboardRoute && user ? (
               <>
-                <Link to={dashboardPath} className="rounded-full bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-slate-900">
+                <Link to={dashboardPath} className="rounded-full bg-[var(--brand)] px-4 py-2 text-sm font-bold text-[var(--text)] shadow-sm">
                   Dashboard
                 </Link>
-                <button type="button" onClick={logout} className="text-sm font-medium text-white/90 hover:text-white">
+                <button type="button" onClick={logout} className="text-sm font-medium text-[var(--muted)] hover:text-[var(--text)]">
                   Logout
                 </button>
               </>
             ) : (
               !isDashboardRoute ? (
-                <Link to="/register" className="text-sm font-medium text-white/90 hover:text-white">
+                <Link to="/register" className="text-sm font-medium text-[var(--muted)] hover:text-[var(--text)]">
                   Get Started
                 </Link>
               ) : null

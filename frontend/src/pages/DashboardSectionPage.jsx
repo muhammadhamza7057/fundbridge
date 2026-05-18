@@ -341,8 +341,8 @@ const sectionContent = {
 
 function SummaryCard({ label, value, detail }) {
   return (
-    <article className="rounded-[24px] border border-slate-200 bg-slate-50/90 p-5 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">{label}</p>
+    <article className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#a0a04f]">{label}</p>
       <p className="mt-4 text-3xl font-black tracking-tight text-slate-900">{value}</p>
       <p className="mt-2 text-sm leading-6 text-slate-500">{detail}</p>
     </article>
@@ -351,13 +351,13 @@ function SummaryCard({ label, value, detail }) {
 
 function ItemCard({ title, detail, state }) {
   return (
-    <article className="rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm">
+    <article className="rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f7f2e7_100%)] p-4 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h3 className="font-semibold text-slate-900">{title}</h3>
           <p className="mt-1 text-sm text-slate-500">{detail}</p>
         </div>
-        <span className="rounded-full bg-[#d8e75f]/20 px-3 py-1 text-xs font-semibold text-slate-900">{state}</span>
+        <span className="rounded-full bg-[var(--brand)] px-3 py-1 text-xs font-semibold text-slate-900">{state}</span>
       </div>
     </article>
   );
@@ -367,7 +367,7 @@ function DetailCard({ section, role, badge, detail, items }) {
   const icon = section === 'filters' ? <FiSliders className="text-[#f18f80]" /> : section === 'chat' ? <FiMessageCircle className="text-[#f18f80]" /> : section === 'help' ? <FiHelpCircle className="text-[#f18f80]" /> : <FiTool className="text-[#f18f80]" />;
 
   return (
-    <article className="rounded-[28px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-5 shadow-sm md:p-6">
+    <article className="rounded-[28px] border border-slate-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f4efe4_100%)] p-5 shadow-sm md:p-6">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-semibold text-slate-900">Quick note</h2>
@@ -375,7 +375,7 @@ function DetailCard({ section, role, badge, detail, items }) {
         </div>
         <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">{badge}</span>
       </div>
-      <div className="mt-4 rounded-[22px] border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
+      <div className="mt-4 rounded-[22px] border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600 shadow-sm">
         <div className="flex items-center gap-3 text-slate-900">
           {icon}
           <span className="font-semibold">{role === 'founder' ? 'Founder tip' : 'Investor tip'}</span>

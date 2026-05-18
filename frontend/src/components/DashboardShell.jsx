@@ -6,10 +6,10 @@ import { useAuth } from '../context/AuthContext';
 
 function SidebarLink({ to, label, icon: Icon, active = false, onClick }) {
   const baseClass = `group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition ${
-    active ? 'bg-white text-slate-950 shadow-[0_10px_30px_rgba(15,23,42,0.18)]' : 'text-white/75 hover:bg-white/8 hover:text-white'
+    active ? 'bg-[var(--brand)] text-slate-950 shadow-[0_10px_30px_rgba(15,23,42,0.22)]' : 'text-white/75 hover:bg-white/8 hover:text-white'
   }`;
   const iconClass = `flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition ${
-    active ? 'bg-[#d8e75f] text-slate-950' : 'bg-white/10 text-white/80 group-hover:bg-white/15 group-hover:text-white'
+    active ? 'bg-[#e7ef94] text-slate-950' : 'bg-white/10 text-white/80 group-hover:bg-white/15 group-hover:text-white'
   }`;
 
   if (to.startsWith('#')) {
@@ -104,10 +104,10 @@ export default function DashboardShell({
   };
 
   return (
-    <section className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(216,231,95,0.16),transparent_26%),radial-gradient(circle_at_top_right,rgba(241,143,128,0.12),transparent_24%),linear-gradient(180deg,#f6f8fc_0%,#edf2f7_100%)] text-slate-900 lg:flex">
+    <section className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(199,219,79,0.14),transparent_26%),radial-gradient(circle_at_top_right,rgba(246,176,166,0.12),transparent_24%),linear-gradient(180deg,#f5f1e8_0%,#efe8db_100%)] text-slate-900 lg:flex">
       {menuOpen ? <button type="button" className="fixed inset-0 z-40 bg-slate-950/30 lg:hidden" onClick={() => setMenuOpen(false)} aria-label="Close sidebar" /> : null}
 
-      <aside className="fixed inset-y-0 left-0 z-50 hidden w-[300px] flex-col border-r border-white/10 bg-[#2c2c2c] text-white shadow-[18px_0_50px_rgba(15,23,42,0.18)] lg:sticky lg:top-0 lg:flex lg:h-screen">
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-[300px] flex-col border-r border-white/10 bg-[#2d2d2d] text-white shadow-[18px_0_50px_rgba(15,23,42,0.18)] lg:sticky lg:top-0 lg:flex lg:h-screen">
         <div className="flex items-center gap-3 px-6 py-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.34em] text-white/45">FundBridge</p>
@@ -126,7 +126,7 @@ export default function DashboardShell({
       </aside>
 
       <div className="min-w-0 flex-1">
-        <header className="border-b border-white/60 bg-white/80 px-4 py-4 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-xl md:px-6 lg:px-8">
+        <header className="border-b border-white/60 bg-white/85 px-4 py-4 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-xl md:px-6 lg:px-8">
           <div className="mx-auto flex max-w-[1520px] items-center justify-between gap-4">
             <div className="flex min-w-0 flex-1 items-center gap-3">
               <button
@@ -140,7 +140,7 @@ export default function DashboardShell({
               </button>
               <div className="min-w-0">
                 <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Home &nbsp;›&nbsp; Dashboard</p>
-                <h1 className="mt-1 truncate text-xl font-semibold text-slate-900 md:text-2xl">{role} workspace</h1>
+                <h1 className="mt-1 truncate text-xl font-extrabold text-slate-900 md:text-2xl">{role} workspace</h1>
               </div>
             </div>
 
@@ -217,19 +217,19 @@ export default function DashboardShell({
 
         <main className="px-3 py-4 sm:px-4 md:px-6 md:py-6">
           <div className="mx-auto max-w-[1520px]">
-            <div className="rounded-[28px] border border-slate-200 bg-white/90 p-4 shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:p-5 md:rounded-[32px] md:p-8">
+            <div className="rounded-[30px] border border-slate-200 bg-white/92 p-4 shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:p-5 md:rounded-[34px] md:p-8">
               <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.34em] text-slate-400">{eyebrow}</p>
                   <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl md:text-5xl">{title}</h2>
                   <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-500 md:text-[15px]">{subtitle}</p>
                 </div>
-                <Link to={ctaTo} className="inline-flex w-full items-center justify-center rounded-full border border-[#f18f80] bg-[#f18f80] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(241,143,128,0.28)] transition hover:-translate-y-0.5 hover:bg-[#ea7c6c] sm:w-auto">
+                <Link to={ctaTo} className="inline-flex w-full items-center justify-center rounded-full border border-[#f6b0a6] bg-[#f6b0a6] px-5 py-3 text-sm font-semibold text-slate-900 shadow-[0_10px_24px_rgba(246,176,166,0.28)] transition hover:-translate-y-0.5 hover:bg-[#ef9e92] sm:w-auto">
                   {ctaLabel} <span className="ml-2">+</span>
                 </Link>
               </div>
 
-              {aside ? <div className="mb-6 rounded-[28px] border border-slate-200 bg-slate-50 p-5 md:p-6">{aside}</div> : null}
+              {aside ? <div className="mb-6 rounded-[28px] border border-slate-200 bg-[linear-gradient(180deg,#fffdf8_0%,#f6f1e6_100%)] p-5 md:p-6">{aside}</div> : null}
 
               <div>{children}</div>
             </div>
