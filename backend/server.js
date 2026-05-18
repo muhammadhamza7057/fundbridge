@@ -32,13 +32,16 @@ if (!fs.existsSync(uploadsDir)) {
 const corsOptions = {
   origin: ['https://fundbridge-ten.vercel.app', 'http://localhost:3000'],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 const io = new Server(server, {
   cors: {
-    ...corsOptions,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    origin: ['https://fundbridge-ten.vercel.app', 'http://localhost:3000'],
+    credentials: true,
   },
+  transports: ['websocket', 'polling'],
 });
 
 app.use(cors(corsOptions));
@@ -70,7 +73,7 @@ const PORT = Number(process.env.PORT) || 5000;
 const HOST = '0.0.0.0';
 
 function listenOnPort() {
-  server.listen(PORT, HOST, () => {
+  server.listen(PORT, () => {
     console.log(`Server running on ${HOST}:${PORT}`);
   });
 }
