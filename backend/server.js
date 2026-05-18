@@ -40,8 +40,11 @@ const io = new Server(server, {
   cors: {
     origin: ['https://fundbridge-ten.vercel.app', 'http://localhost:3000'],
     credentials: true,
+    methods: ['GET', 'POST'],
   },
   transports: ['websocket', 'polling'],
+  pingTimeout: 60000,
+  pingInterval: 25000,
 });
 
 app.use(cors(corsOptions));
@@ -49,6 +52,10 @@ app.options(/.*/, cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(uploadsDir));
+
+app.get('/api/auth/firebase', (req, res) => {
+  res.status(200).json({ message: 'Firebase auth endpoint' });
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/startup', startupRoutes);
