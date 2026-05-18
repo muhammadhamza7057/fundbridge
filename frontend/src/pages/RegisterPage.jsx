@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const { register, loading, updateUser, signInWithGoogle } = useAuth();
+  const { user, register, loading, updateUser, signInWithGoogle } = useAuth();
   const [form, setForm] = useState({ username: '', firstName: '', lastName: '', name: '', email: '', password: '', confirmPassword: '', role: '', phone: '', agreePrivacy: false, agreeTerms: false });
   const [error, setError] = useState('');
   const [tab, setTab] = useState('register');

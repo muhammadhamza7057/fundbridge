@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login, loading, updateUser, signInWithGoogle } = useAuth();
+  const { user, login, loading, updateUser, signInWithGoogle } = useAuth();
   const [form, setForm] = useState({ email: '', password: '', role: '' });
   const [error, setError] = useState('');
   const [tab, setTab] = useState('login');
