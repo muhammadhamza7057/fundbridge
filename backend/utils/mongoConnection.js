@@ -7,9 +7,10 @@ function normalizeMongoUri(uri) {
 
 function getMongoUriCandidates() {
   const primary = normalizeMongoUri(process.env.MONGO_URI || process.env.MONGODB_URI);
-  const localFallback = normalizeMongoUri(
-    process.env.MONGO_LOCAL_URI || 'mongodb://127.0.0.1:27017/FundBridge'
-  );
+  const allowLocalFallback = process.env.NODE_ENV !== 'production' || process.env.ALLOW_LOCAL_MONGO_FALLBACK === 'true';
+  const localFallback = allowLocalFallback
+    ? normalizeMongoUri(process.env.MONGO_LOCAL_URI || 'mongodb://127.0.0.1:27017/FundBridge')
+    : '';
 
   return [primary, localFallback].filter(Boolean);
 }
@@ -52,8 +53,8 @@ async function connectMongo(mongoose, { label = 'MongoDB', retryCount = 1, retry
           continue;
         }
 
-        if (uri === candidates[0] && candidates.length > 1 && isDnsMongoError(error)) {
-          console.warn(`${label} SRV lookup failed (${error.message}). Trying fallback Mongo URI...`);
+        if (uri === candidates[0] && candidates.length > 1) {
+          console.warn(`${label} primary connection failed (${error.message}). Trying fallback Mongo URI...`);
           break;
         }
 
