@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, getRedirectResult, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCADavD434HEwS8hgUoiveIigc2OePsMS0',
@@ -18,4 +18,12 @@ async function signInWithGooglePopup() {
   return await signInWithPopup(auth, provider);
 }
 
-export { app, auth, provider, signInWithGooglePopup };
+async function signInWithGoogleRedirect() {
+  return await signInWithRedirect(auth, provider);
+}
+
+async function getGoogleRedirectResult() {
+  return await getRedirectResult(auth);
+}
+
+export { app, auth, provider, signInWithGooglePopup, signInWithGoogleRedirect, getGoogleRedirectResult };

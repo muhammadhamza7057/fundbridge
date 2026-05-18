@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
@@ -11,6 +11,16 @@ export default function RegisterPage() {
   const [form, setForm] = useState({ username: '', firstName: '', lastName: '', name: '', email: '', password: '', confirmPassword: '', role: '', phone: '', agreePrivacy: false, agreeTerms: false });
   const [error, setError] = useState('');
   const [tab, setTab] = useState('register');
+
+  useEffect(() => {
+    if (!loading && user?.role) {
+      if (user.role === 'admin') {
+        navigate('/dashboard/admin/users', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
+    }
+  }, [loading, navigate, user]);
 
   const submit = async (event) => {
     event.preventDefault();
@@ -96,7 +106,7 @@ export default function RegisterPage() {
                 {error ? <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">{error}</p> : null}
 
                 <div className="flex items-center gap-4">
-                  <button type="button" onClick={async () => {
+                    <button type="button" onClick={async () => {
                     setError('');
                     if (!form.role) {
                       setError('Please select a role before continuing with Google');
@@ -112,6 +122,9 @@ export default function RegisterPage() {
                         name: form.name || `${form.firstName || ''} ${form.lastName || ''}`.trim(),
                       };
                       const gdata = await signInWithGoogle(googlePayload);
+                      if (gdata?.redirected) {
+                        return;
+                      }
                       const role = gdata?.data?.user?.role || gdata?.user?.role || form.role;
                       if (role === 'admin') {
                         navigate('/dashboard/admin/users', { replace: true });
@@ -121,7 +134,7 @@ export default function RegisterPage() {
                     } catch (e) {
                       setError(e?.response?.data?.error || e?.response?.data?.message || 'Google sign-in failed');
                     }
-                  }} className="inline-flex items-center gap-3 rounded-md border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  }} className="inline-flex w-full items-center justify-center gap-3 rounded-md border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 sm:w-auto">
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M21.6 12.227c0-.74-.066-1.451-.19-2.14H12v4.047h5.43c-.234 1.263-.94 2.335-2.005 3.049v2.54h3.24c1.896-1.743 2.93-4.318 2.93-7.496z" fill="#4285F4"/>
                       <path d="M12 22c2.7 0 4.97-.896 6.63-2.428l-3.24-2.54c-.9.605-2.048.966-3.39.966-2.606 0-4.816-1.76-5.606-4.128H3.02v2.59C4.68 19.978 8.04 22 12 22z" fill="#34A853"/>
@@ -130,7 +143,7 @@ export default function RegisterPage() {
                     </svg>
                     Continue with Google
                   </button>
-                  <Button type="submit" className="min-w-40 bg-[#f18f80] px-10 py-4 text-base text-white hover:bg-[#ef7f6d]" disabled={loading || !form.agreePrivacy || !form.agreeTerms}>
+                  <Button type="submit" className="w-full min-w-40 bg-[#f18f80] px-10 py-4 text-base text-white hover:bg-[#ef7f6d] sm:w-auto" disabled={loading || !form.agreePrivacy || !form.agreeTerms}>
                     {loading ? 'Creating account...' : 'Register'}
                   </Button>
                 </div>

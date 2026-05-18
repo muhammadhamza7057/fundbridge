@@ -104,7 +104,7 @@ export default function DashboardShell({
   };
 
   return (
-    <section className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(216,231,95,0.16),transparent_26%),radial-gradient(circle_at_top_right,rgba(241,143,128,0.12),transparent_24%),linear-gradient(180deg,#f6f8fc_0%,#edf2f7_100%)] text-slate-900 lg:flex">
+    <section className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(216,231,95,0.16),transparent_26%),radial-gradient(circle_at_top_right,rgba(241,143,128,0.12),transparent_24%),linear-gradient(180deg,#f6f8fc_0%,#edf2f7_100%)] text-slate-900 lg:flex">
       {menuOpen ? <button type="button" className="fixed inset-0 z-40 bg-slate-950/30 lg:hidden" onClick={() => setMenuOpen(false)} aria-label="Close sidebar" /> : null}
 
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-[300px] flex-col border-r border-white/10 bg-[#2c2c2c] text-white shadow-[18px_0_50px_rgba(15,23,42,0.18)] lg:sticky lg:top-0 lg:flex lg:h-screen">
@@ -128,7 +128,7 @@ export default function DashboardShell({
       <div className="min-w-0 flex-1">
         <header className="border-b border-white/60 bg-white/80 px-4 py-4 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-xl md:px-6 lg:px-8">
           <div className="mx-auto flex max-w-[1520px] items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
               <button
                 type="button"
                 onClick={() => setMenuOpen((open) => !open)}
@@ -138,13 +138,13 @@ export default function DashboardShell({
               >
                 {menuOpen ? <FiX className="text-lg" /> : <FiMenu className="text-lg" />}
               </button>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Home &nbsp;›&nbsp; Dashboard</p>
-                <h1 className="mt-1 text-xl font-semibold text-slate-900 md:text-2xl">{role} workspace</h1>
+                <h1 className="mt-1 truncate text-xl font-semibold text-slate-900 md:text-2xl">{role} workspace</h1>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 sm:gap-4">
               <div className="hidden items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-2.5 shadow-sm md:flex md:w-[360px] lg:w-[420px]">
                 <FiSearch className="text-slate-400" />
                 <input
@@ -159,7 +159,7 @@ export default function DashboardShell({
               <div className="relative" ref={accountMenuRef}>
                 <button
                   onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-                  className="hidden items-center gap-3 rounded-full border border-slate-200 bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5 sm:flex"
+                  className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-3 py-2 shadow-sm transition hover:-translate-y-0.5"
                 >
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#15172d] text-sm font-black uppercase text-white">
                     {userInitial}
@@ -215,16 +215,16 @@ export default function DashboardShell({
           </div>
         </header>
 
-        <main className="px-4 py-5 md:px-6 md:py-6">
+        <main className="px-3 py-4 sm:px-4 md:px-6 md:py-6">
           <div className="mx-auto max-w-[1520px]">
-            <div className="rounded-[32px] border border-slate-200 bg-white/90 p-5 shadow-[0_24px_70px_rgba(15,23,42,0.08)] md:p-8">
+            <div className="rounded-[28px] border border-slate-200 bg-white/90 p-4 shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:p-5 md:rounded-[32px] md:p-8">
               <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.34em] text-slate-400">{eyebrow}</p>
-                  <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 md:text-5xl">{title}</h2>
+                  <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl md:text-5xl">{title}</h2>
                   <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-500 md:text-[15px]">{subtitle}</p>
                 </div>
-                <Link to={ctaTo} className="inline-flex items-center justify-center rounded-full border border-[#f18f80] bg-[#f18f80] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(241,143,128,0.28)] transition hover:-translate-y-0.5 hover:bg-[#ea7c6c]">
+                <Link to={ctaTo} className="inline-flex w-full items-center justify-center rounded-full border border-[#f18f80] bg-[#f18f80] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(241,143,128,0.28)] transition hover:-translate-y-0.5 hover:bg-[#ea7c6c] sm:w-auto">
                   {ctaLabel} <span className="ml-2">+</span>
                 </Link>
               </div>
