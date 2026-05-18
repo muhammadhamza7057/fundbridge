@@ -29,10 +29,8 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-const CLIENT_FRONTEND_URL = process.env.CLIENT_URL || 'https://your-frontend.vercel.app';
-
 const corsOptions = {
-  origin: CLIENT_FRONTEND_URL,
+  origin: ['https://fundbridge-ten.vercel.app', 'http://localhost:3000'],
   credentials: true,
 };
 

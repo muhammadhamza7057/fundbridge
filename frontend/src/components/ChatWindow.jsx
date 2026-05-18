@@ -6,6 +6,7 @@ import { getChat } from '../services/chatService';
 import { useAuth } from '../context/AuthContext';
 import { useSocketContext } from '../context/SocketContext';
 import { uploadAttachment } from '../services/chatService';
+import { API_BASE_URL } from '../services/api';
 
 export default function ChatWindow({ chatId, title }) {
   const { user } = useAuth();
@@ -17,7 +18,6 @@ export default function ChatWindow({ chatId, title }) {
   const [showUploadMenu, setShowUploadMenu] = useState(false);
   const fileInputRef = useRef(null);
   const imageInputRef = useRef(null);
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -169,7 +169,7 @@ export default function ChatWindow({ chatId, title }) {
                   {attachments && attachments.length > 0 && (
                     <div className={`${onlyImages ? 'mt-2 flex flex-wrap gap-2' : 'mt-2 space-y-2'}`}>
                       {attachments.map((att, idx) => {
-                        const href = att.url && att.url.startsWith('http') ? att.url : `${API_BASE}${att.url}`;
+                        const href = att.url && att.url.startsWith('http') ? att.url : `${API_BASE_URL}${att.url}`;
                         if (att.mimetype && att.mimetype.startsWith('image/')) {
                           // image rendering
                           return (
@@ -251,8 +251,7 @@ export default function ChatWindow({ chatId, title }) {
               setUploading(true);
               try {
                 const res = await uploadAttachment(chatId, file);
-                const base = API_BASE;
-                const url = res.url && res.url.startsWith('http') ? res.url : `${base}${res.url}`;
+                const url = res.url && res.url.startsWith('http') ? res.url : `${API_BASE_URL}${res.url}`;
                 const attachment = { url, filename: res.filename, mimetype: res.mimetype };
                 sendMessage('', [attachment]);
               } catch (err) {

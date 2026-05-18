@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
+import { API_BASE_URL } from '../services/api';
 
 let socketInstance = null;
 
@@ -15,13 +16,12 @@ export const useSocket = () => {
     }
 
     // Connect to the socket server (backend)
-    const socketUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-    const newSocket = io(socketUrl, {
+    const newSocket = io(API_BASE_URL, {
+      transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       reconnectionAttempts: 5,
-      transports: ['websocket'],
     });
 
     newSocket.on('connect', () => {
