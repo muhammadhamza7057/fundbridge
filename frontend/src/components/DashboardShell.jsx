@@ -109,9 +109,12 @@ export default function DashboardShell({
 
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-[300px] flex-col border-r border-white/10 bg-[#2d2d2d] text-white shadow-[18px_0_50px_rgba(15,23,42,0.18)] lg:sticky lg:top-0 lg:flex lg:h-screen">
         <div className="flex items-center gap-3 px-6 py-6">
-          <div>
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 p-2 shadow-inner shadow-black/10">
+            <img src={logo} alt="FundBridge" className="h-full w-full object-contain" />
+          </div>
+          <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.34em] text-white/45">FundBridge</p>
-            <p className="mt-1 text-lg font-black tracking-tight text-white">Workspace</p>
+            <p className="mt-1 truncate text-lg font-black tracking-tight text-white">Workspace</p>
           </div>
         </div>
 
@@ -240,6 +243,9 @@ export default function DashboardShell({
                 <div className="absolute inset-y-0 left-0 w-[300px] max-w-[88vw] flex flex-col bg-[#2c2c2c] text-white shadow-[20px_0_40px_rgba(15,23,42,0.18)]">
                   <div className="flex items-center justify-between gap-3 border-b border-white/10 px-6 py-5">
                     <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 p-2 shadow-inner shadow-black/10">
+                        <img src={logo} alt="FundBridge" className="h-full w-full object-contain" />
+                      </div>
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.34em] text-white/45">FundBridge</p>
                         <p className="text-sm font-semibold text-white">{role} menu</p>
